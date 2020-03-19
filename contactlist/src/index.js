@@ -1,17 +1,21 @@
-import React from "react";
+import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
-//import uuid from "react-uuid";
+import uuid from "react-uuid";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./index.css";
 
 // Components
 import ContactList from "./Components/ContactList/ContactList";
 import AddContact from "./Components/AddContact/AddContact";
+import Header from "./Components/Header/Header";
+import NotFaund from "./Components/NotFaund/NotFaund";
+import EditContact from "./Components/EditContact/EditContact";
 
 class App extends React.Component {
   state = {
     List: [
       {
-        //id: uuid(),
+        id: uuid(),
         name: "Richerd Stevens",
         address: "5842 Hillcrest Rd",
         phone: "(870) 288-4149",
@@ -21,7 +25,7 @@ class App extends React.Component {
         star: false
       },
       {
-        //id: uuid(),
+        id: uuid(),
         name: "Linus Torvalds",
         address: "1236 Stepana Banderu street",
         phone: "(068) 87-41-789",
@@ -31,7 +35,7 @@ class App extends React.Component {
         star: true
       },
       {
-        //d: uuid(),
+        id: uuid(),
         name: "Deniss Richi",
         address: "12 Pr. Pease",
         phone: "(050) 288-41-491",
@@ -41,7 +45,7 @@ class App extends React.Component {
         star: true
       },
       {
-        //id: uuid(),
+        id: uuid(),
         name: "Camila terry",
         address: "12 London",
         phone: "(066) 77-61-291",
@@ -70,61 +74,68 @@ class App extends React.Component {
       `Name: ${name}\nAdderss: ${address}\nPhone: ${phone}\nAvatar: ${avatar}\nEmail: ${email}`
     );
     const newContact = {
-      //id: uuid(),
-      name: "Bob Torvalds",
-      address: "1236 Stepana Banderu street",
-      phone: "(068) 87-41-789",
-      email: "linus@kernel.org",
-      avatar: 5,
-      star: true
-    }
+      id: uuid(),
+      name: name,
+      address: address,
+      phone: phone,
+      email: email,
+      gender: "women",
+      avatar: avatar,
+      star: false
+    };
     const newList = [...this.state.List, newContact];
     this.setState({
       List: newList
-    })
+    });
   };
+  onDeleteContact = id => {
+    const index = this.state.List.findIndex(elem => elem.id === id);
+    // console.log(id);
+    // console.log(index);
+    const partOne = this.state.List.slice(0, index);
+    const partTwo = this.state.List.slice(index + 1);
+    const newList = [...partOne, ...partTwo];
+    this.setState({
+      List: newList
+    });
+  };
+
 
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <div className="panel panel-default">
-            <div className="panel-heading c-list">
-              <span className="title">Contacts</span>
-              <ul className="pull-right c-controls">
-                <li>
-                  <a
-                    href="#cant-do-all-the-work-for-you"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Add Contact"
-                  >
-                    <i className="glyphicon glyphicon-plus"></i>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="hide-search"
-                    data-command="toggle-search"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Toggle Search"
-                  >
-                    <i className="fa fa-ellipsis-v"></i>
-                  </a>
-                </li>
-              </ul>
+      <Fragment>
+        <Router>
+          <Header />
+          <div className="container">
+            <div className="row">
+              <Switch>
+                <Route
+                  path="/"
+                  exact
+                  render={() => (
+                    <ContactList
+                      List={this.state.List}
+                      onStarChange={this.onStarChange}
+                      onDeleteContact={this.onDeleteContact}
+                    />
+                  )}
+                />
+                <Route
+                  path="/addcontact"
+                  exact
+                  render={() => <AddContact onAddContact={this.onAddContact} />}
+                />
+                <Route
+                  path="/editcontact"
+                  exact
+                  render={() => <EditContact />}
+                />
+                <Route path="*" component={NotFaund} />
+              </Switch>
             </div>
           </div>
-          <ContactList
-            List={this.onAddContact}
-            // onAddContact={this.onAddContact}
-            onStarChange={this.onStarChange}
-          />
-          <AddContact />
-        </div>
-      </div>
+        </Router>
+      </Fragment>
     );
   }
 }

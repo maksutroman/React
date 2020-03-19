@@ -1,7 +1,7 @@
 import React from "react";
-import "./AddContact.css";
+import "./EditContact.css";
 
-class AddContact extends React.Component {
+class EditContact extends React.Component {
     state = {
         name: null,
         address: null,
@@ -122,11 +122,11 @@ class AddContact extends React.Component {
             </label>
                     </div>
                     <button type="submit" className="btn btn-primary">
-                        Add contact
+                        Edit contact
           </button>
                 </form>
             </div>
         );
     }
 }
-export default AddContact;
+export default EditContact;
