@@ -1,4 +1,5 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import "./AddContact.css";
 
 class AddContact extends React.Component {
@@ -7,15 +8,11 @@ class AddContact extends React.Component {
         address: null,
         phone: null,
         avatar: null,
-        email: null
+        email: null,
+        isHome: false
+
     };
 
-    getName = event => {
-        //console.log(event.target.value);
-        this.setState({
-            name: event.target.value
-        });
-    };
     getName = event => {
         //console.log(event.target.value);
         this.setState({
@@ -51,11 +48,18 @@ class AddContact extends React.Component {
         // console.log(
         //   `Name: ${this.state.name}\nAdderss: ${this.state.address}\nPhone: ${this.state.phone}\nAvatar: ${this.state.avatar}\nEmail: ${this.state.email}`
         // );
-        const { name, address, phone, avatar, email } = this.state;
+        const { name, address, phone, avatar, email, isHome } = this.state;
         this.props.onAddContact(name, address, phone, avatar, email);
+        this.setState({
+            isHome: true
+        });
     };
 
     render() {
+        const { name, address, phone, email, gender, avatar, isHome } = this.state;
+        if (isHome) {
+            return <Redirect to="/" />;
+        }
         return (
             <div>
                 {/* {this.state.name}

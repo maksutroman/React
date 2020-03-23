@@ -53,15 +53,17 @@ class ContactItem extends Component {
                   onClick={this.props.onStarChange}
                 ></i>
                 <i
-                  class="fa fa-trash-o fa-2x trash"
+                  className="fa fa-trash-o fa-2x trash"
                   aria-hidden="true"
                   onClick={this.props.onDeleteContact}
                 ></i>
-                <i
-                  class="fa fa-edit fa-2x"
-                  aria-hidden="true"
-                  onClick={this.props.onEditContact}
-                ></i>
+                <Link to="/editcontact">
+                  <i
+                    className="fa fa-edit fa-2x"
+                    aria-hidden="true"
+                    onClick={this.props.onEditContact}
+                  ></i>
+                </Link>
               </span>
             </span>
 

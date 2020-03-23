@@ -8,7 +8,7 @@ import "./index.css";
 import ContactList from "./Components/ContactList/ContactList";
 import AddContact from "./Components/AddContact/AddContact";
 import Header from "./Components/Header/Header";
-import NotFaund from "./Components/NotFaund/NotFaund";
+import NotFound from "./Components/NotFound/NotFound";
 import EditContact from "./Components/EditContact/EditContact";
 
 class App extends React.Component {
@@ -54,7 +54,8 @@ class App extends React.Component {
         avatar: 23,
         star: false
       }
-    ]
+    ],
+    currentContact: ""
   };
 
   onStarChange = id => {
@@ -69,10 +70,10 @@ class App extends React.Component {
     });
   };
 
-  onAddContact = (name, address, phone, avatar, email) => {
-    console.log(
-      `Name: ${name}\nAdderss: ${address}\nPhone: ${phone}\nAvatar: ${avatar}\nEmail: ${email}`
-    );
+  onAddContact = (name, address, phone, avatar, email, isHome) => {
+    // console.log(
+    //   `Name: ${name}\nAdderss: ${address}\nPhone: ${phone}\nAvatar: ${avatar}\nEmail: ${email}`
+    // );
     const newContact = {
       id: uuid(),
       name: name,
@@ -81,7 +82,8 @@ class App extends React.Component {
       email: email,
       gender: "women",
       avatar: avatar,
-      star: false
+      star: false,
+      isHome: false
     };
     const newList = [...this.state.List, newContact];
     this.setState({
@@ -100,6 +102,39 @@ class App extends React.Component {
     });
   };
 
+  onEditContact = id => {
+    const index = this.state.List.findIndex(elem => elem.id === id);
+    const currentContact = this.state.List[index];
+    // console.log(currentContact);
+    this.setState({
+      currentContact: currentContact
+    });
+  };
+
+  onEditCurrentContact = (name, address, phone, avatar, email, id) => {
+    // console.log(
+    //   `Name: ${name}\nAdderss: ${address}\nPhone: ${phone}\nAvatar: ${avatar}\nEmail: ${email}`
+    // );
+    const index = this.state.List.findIndex(elem => elem.id === id);
+    const editedContact = {
+      id: id,
+      name: name,
+      address: address,
+      phone: phone,
+      email: email,
+      gender: "women",
+      avatar: avatar,
+      star: false
+    };
+    //console.log(editedContact);
+    const partOne = this.state.List.slice(0, index);
+    const partTwo = this.state.List.slice(index + 1);
+    const newList = [...partOne, editedContact, ...partTwo];
+    //console.log(newList);
+    this.setState({
+      List: newList
+    });
+  };
 
   render() {
     return (
@@ -117,6 +152,7 @@ class App extends React.Component {
                       List={this.state.List}
                       onStarChange={this.onStarChange}
                       onDeleteContact={this.onDeleteContact}
+                      onEditContact={this.onEditContact}
                     />
                   )}
                 />
@@ -127,10 +163,14 @@ class App extends React.Component {
                 />
                 <Route
                   path="/editcontact"
-                  exact
-                  render={() => <EditContact />}
+                  render={() => (
+                    <EditContact
+                      currentContact={this.state.currentContact}
+                      onEditCurrentContact={this.onEditCurrentContact}
+                    />
+                  )}
                 />
-                <Route path="*" component={NotFaund} />
+                <Route path="*" component={NotFound} />>
               </Switch>
             </div>
           </div>
@@ -141,5 +181,3 @@ class App extends React.Component {
 }
 
 ReactDOM.render(<App />, document.getElementById("root"));
-
-
