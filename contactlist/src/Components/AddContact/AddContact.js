@@ -9,10 +9,15 @@ class AddContact extends React.Component {
         phone: null,
         avatar: null,
         email: null,
-        isHome: false
-
+        isRedirect: false
     };
 
+    getName = event => {
+        //console.log(event.target.value);
+        this.setState({
+            name: event.target.value
+        });
+    };
     getName = event => {
         //console.log(event.target.value);
         this.setState({
@@ -48,25 +53,20 @@ class AddContact extends React.Component {
         // console.log(
         //   `Name: ${this.state.name}\nAdderss: ${this.state.address}\nPhone: ${this.state.phone}\nAvatar: ${this.state.avatar}\nEmail: ${this.state.email}`
         // );
-        const { name, address, phone, avatar, email, isHome } = this.state;
+        const { name, address, phone, avatar, email } = this.state;
         this.props.onAddContact(name, address, phone, avatar, email);
         this.setState({
-            isHome: true
+            isRedirect: true
         });
     };
 
     render() {
-        const { name, address, phone, email, gender, avatar, isHome } = this.state;
-        if (isHome) {
+        const { isRedirect } = this.state;
+        if (isRedirect) {
             return <Redirect to="/" />;
         }
         return (
             <div>
-                {/* {this.state.name}
-        {this.state.address}
-        {this.state.phone}
-        {this.state.avatar}
-        {this.state.email} */}
                 <form onSubmit={this.onSendData}>
                     <div className="form-group">
                         <div className="form-group">

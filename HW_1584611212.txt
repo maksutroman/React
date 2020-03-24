@@ -1,0 +1,4 @@
+1. До вже існуючої аплікації реалізувати:
+компонент редагування контакту 
+
+https://github.com/maksutroman/React/tree/master/contactlist

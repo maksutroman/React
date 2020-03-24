@@ -55,7 +55,8 @@ class App extends React.Component {
         star: false
       }
     ],
-    currentContact: ""
+    currentContact: "",
+    findContact: ""
   };
 
   onStarChange = id => {
@@ -70,7 +71,7 @@ class App extends React.Component {
     });
   };
 
-  onAddContact = (name, address, phone, avatar, email, isHome) => {
+  onAddContact = (name, address, phone, avatar, email) => {
     // console.log(
     //   `Name: ${name}\nAdderss: ${address}\nPhone: ${phone}\nAvatar: ${avatar}\nEmail: ${email}`
     // );
@@ -82,8 +83,7 @@ class App extends React.Component {
       email: email,
       gender: "women",
       avatar: avatar,
-      star: false,
-      isHome: false
+      star: false
     };
     const newList = [...this.state.List, newContact];
     this.setState({
@@ -136,11 +136,34 @@ class App extends React.Component {
     });
   };
 
+  onSearch = contactName => {
+    // console.log("Contact name => ", contactName);
+    this.setState({
+      findContact: contactName
+    });
+  };
+
+  onShowContact = (items, searchValue) => {
+    // console.log("Start items => ", items, "\nSearchValue => ", searchValue);
+    if (searchValue.length === 0) {
+      return items;
+    }
+    return items.filter(item => {
+      // console.log("item => ", item.name);
+
+      return item.name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1;
+    });
+  };
+
   render() {
+    const showContacts = this.onShowContact(
+      this.state.List,
+      this.state.findContact
+    );
     return (
       <Fragment>
         <Router>
-          <Header />
+          <Header onSearch={this.onSearch} />
           <div className="container">
             <div className="row">
               <Switch>
@@ -149,7 +172,7 @@ class App extends React.Component {
                   exact
                   render={() => (
                     <ContactList
-                      List={this.state.List}
+                      List={showContacts}
                       onStarChange={this.onStarChange}
                       onDeleteContact={this.onDeleteContact}
                       onEditContact={this.onEditContact}
@@ -162,7 +185,7 @@ class App extends React.Component {
                   render={() => <AddContact onAddContact={this.onAddContact} />}
                 />
                 <Route
-                  path="/editcontact"
+                  path="/edit"
                   render={() => (
                     <EditContact
                       currentContact={this.state.currentContact}

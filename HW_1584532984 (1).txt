@@ -1,0 +1,4 @@
+1. До вже існуючої аплікації реалізувати:
+крім того що вже ї в новий контакт додати "стать" і "стар" 
+
+https://github.com/maksutroman/React/tree/master/contactlist
