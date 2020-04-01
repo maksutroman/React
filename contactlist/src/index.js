@@ -12,52 +12,33 @@ import NotFound from "./Components/NotFound/NotFound";
 import EditContact from "./Components/EditContact/EditContact";
 
 class App extends React.Component {
+  URL = "https://event-7c503.firebaseio.com/list.json";
+
   state = {
-    List: [
-      {
-        id: uuid(),
-        name: "Richerd Stevens",
-        address: "5842 Hillcrest Rd",
-        phone: "(870) 288-4149",
-        email: "richerd.stevens@example.com",
-        gender: "men",
-        avatar: 3,
-        star: false
-      },
-      {
-        id: uuid(),
-        name: "Linus Torvalds",
-        address: "1236 Stepana Banderu street",
-        phone: "(068) 87-41-789",
-        email: "linus@kernel.org",
-        gender: "men",
-        avatar: 34,
-        star: true
-      },
-      {
-        id: uuid(),
-        name: "Deniss Richi",
-        address: "12 Pr. Pease",
-        phone: "(050) 288-41-491",
-        email: "deniss@example.com",
-        gender: "men",
-        avatar: 76,
-        star: true
-      },
-      {
-        id: uuid(),
-        name: "Camila terry",
-        address: "12 London",
-        phone: "(066) 77-61-291",
-        email: "Camila@london.com",
-        gender: "women",
-        avatar: 23,
-        star: false
-      }
-    ],
+    List: [],
     currentContact: "",
-    findContact: ""
+    findContact: "",
+    currency: ""
   };
+
+  updateContactList = () => {
+    fetch(this.URL, {
+      method: "GET"
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        this.setState({
+          List: data
+        });
+      })
+      .catch(err => console.log(err));
+  };
+
+  componentDidMount() {
+    this.updateContactList();
+  }
 
   onStarChange = id => {
     // console.log("onStarChange ", id);
@@ -71,10 +52,43 @@ class App extends React.Component {
     });
   };
 
+  async saveNewContact(newList) {
+    await fetch(this.URL, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newList)
+    })
+      .then(function (res) {
+        console.log(res);
+      })
+      .catch(function (res) {
+        console.log(res);
+      });
+    this.updateContactList();
+  };
+
+  async deleteContact(id) {
+    await fetch(this.URL, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newList)
+    })
+      .then(function (res) {
+        console.log(res);
+      })
+      .catch(function (res) {
+        console.log(res);
+      });
+    this.updateContactList();
+  };
+
   onAddContact = (name, address, phone, avatar, email) => {
-    // console.log(
-    //   `Name: ${name}\nAdderss: ${address}\nPhone: ${phone}\nAvatar: ${avatar}\nEmail: ${email}`
-    // );
     const newContact = {
       id: uuid(),
       name: name,
@@ -86,9 +100,7 @@ class App extends React.Component {
       star: false
     };
     const newList = [...this.state.List, newContact];
-    this.setState({
-      List: newList
-    });
+    this.saveNewContact(newList);
   };
   onDeleteContact = id => {
     const index = this.state.List.findIndex(elem => elem.id === id);
@@ -134,6 +146,7 @@ class App extends React.Component {
     this.setState({
       List: newList
     });
+    this.saveNewContact(newList);
   };
 
   onSearch = contactName => {
@@ -160,6 +173,7 @@ class App extends React.Component {
       this.state.List,
       this.state.findContact
     );
+    console.log("currency => ", this.state.currency);
     return (
       <Fragment>
         <Router>
@@ -185,7 +199,7 @@ class App extends React.Component {
                   render={() => <AddContact onAddContact={this.onAddContact} />}
                 />
                 <Route
-                  path="/edit"
+                  path="/editcontact"
                   render={() => (
                     <EditContact
                       currentContact={this.state.currentContact}

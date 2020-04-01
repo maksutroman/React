@@ -20,11 +20,6 @@ class EditContact extends React.Component {
             name: event.target.value
         });
     };
-    getName = event => {
-        this.setState({
-            name: event.target.value
-        });
-    };
     getAddress = event => {
         this.setState({
             address: event.target.value
